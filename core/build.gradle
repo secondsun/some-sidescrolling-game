@@ -24,4 +24,5 @@ dependencies {
 
 license {
     header = rootProject.file('codequality/HEADER')
+    excludes(["**/*.json"])
 }
