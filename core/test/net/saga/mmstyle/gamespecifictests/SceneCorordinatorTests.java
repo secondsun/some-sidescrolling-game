@@ -27,7 +27,9 @@ import java.util.logging.Logger;
 import net.saga.mmstyle.corrdinator.DefaultSceneCoordinator;
 import net.saga.mmstyle.corrdinator.SceneCoordinator;
 import net.saga.mmstyle.screen.IntroScene;
+import net.saga.mmstyle.screen.TitleScene;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 
 /**
@@ -36,11 +38,18 @@ import org.junit.Test;
 public class SceneCorordinatorTests {
  
     @Test
-    public void testLoadsScenesJsonFile() {
+    public void testDefaultSceneCoordinatorLoadsScenesJsonFileAndSetsFirstSceneToFirstElement() {
         SceneCoordinator coordinator = new DefaultSceneCoordinator(new FileHandle(getFile("scenes.json")));
         assertTrue(coordinator.getCurrentScene() instanceof IntroScene);
     }
-
+    
+    @Test
+    public void testDefaultSceneCoordinatorTransitionsIntroToTitle() {
+        SceneCoordinator coordinator = new DefaultSceneCoordinator(new FileHandle(getFile("scenes.json")));
+        coordinator.transition();
+        assertTrue(coordinator.getCurrentScene() instanceof TitleScene);
+    }
+    
     private File getFile(String fileName) {
         try {
             return Paths.get(ClassLoader.getSystemResource(fileName).toURI()).toFile();

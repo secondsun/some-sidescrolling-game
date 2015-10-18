@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.saga.mmstyle.Scene;
+import net.saga.mmstyle.screen.TitleScene;
 
 public class DefaultSceneCoordinator implements SceneCoordinator{
     
@@ -79,6 +80,11 @@ public class DefaultSceneCoordinator implements SceneCoordinator{
             Logger.getLogger(DefaultSceneCoordinator.class.getName()).log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex);
         }
+    }
+
+    @Override
+    public void transition() {
+        this.currentScene = new TitleScene();
     }
     
     

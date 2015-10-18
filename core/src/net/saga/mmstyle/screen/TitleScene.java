@@ -15,30 +15,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.saga.mmstyle.corrdinator;
+package net.saga.mmstyle.screen;
 
+import com.badlogic.gdx.graphics.GL20;
 import net.saga.mmstyle.Scene;
 
-/**
- * This class coordinates the transitions between scenes.
- * 
- * For instance if Game receives a endScene event it should resolve some kind of 
- * Result object.  This class will consume that result and return the next scene.
- * Basically it is like a navigation class for large game states.
- * 
- */
-public interface SceneCoordinator {
+public class TitleScene implements Scene{
 
-    /**
-     * Return a reference to the current scene
-     * 
-     * @return The current scene
-     */ 
-    Scene getCurrentScene();
+    @Override
+    public void init() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
-    /**
-     * The current scene is finished, move to the next scene.
-     */ 
-    public void transition();
+    @Override
+    public void render(GL20 gl) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void destroy() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }
