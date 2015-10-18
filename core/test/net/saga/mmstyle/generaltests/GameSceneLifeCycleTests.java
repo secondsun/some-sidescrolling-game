@@ -21,6 +21,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import net.saga.mmstyle.Game;
 import net.saga.mmstyle.Scene;
+import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -67,6 +68,11 @@ public class GameSceneLifeCycleTests {
     public void testGameCallsDestroyWhenASceneEnds() {
         game.onSceneEnded();
         Mockito.verify(mockScene, times(1)).destroy();
+    }
+    
+    @Test
+    public void whenSceneEndsGameCallsSceneCoordinatorTransition() {
+        fail();
     }
     
 }
