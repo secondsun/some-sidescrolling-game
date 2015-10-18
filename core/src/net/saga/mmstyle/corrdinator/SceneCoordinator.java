@@ -17,9 +17,16 @@
  */
 package net.saga.mmstyle.corrdinator;
 
+import net.saga.mmstyle.Scene;
+
 /**
  * This class coordinates the transitions between scenes.
  */
 public interface SceneCoordinator {
+
+    /**
+     * Return a reference to the current scene
+     */ 
+    Scene getCurrentScene();
     
 }

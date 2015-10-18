@@ -17,9 +17,21 @@
  */
 package net.saga.mmstyle.gamespecifictests;
 
+import net.saga.mmstyle.corrdinator.DefaultSceneCoordinator;
+import net.saga.mmstyle.corrdinator.SceneCoordinator;
+import net.saga.mmstyle.screen.IntroScene;
+import static org.junit.Assert.assertTrue;
+import org.junit.Test;
+
 /**
  * This class tests that the Game object properly sets up the Game
  */
-public class GameSetupTests {
+public class SceneCorordinatorTests {
+ 
+    @Test
+    public void testLoadsScenesJsonFile() {
+        SceneCoordinator coordinator = new DefaultSceneCoordinator("scenes.json");
+        assertTrue(coordinator.getCurrentScene() instanceof IntroScene);
+    }
     
 }

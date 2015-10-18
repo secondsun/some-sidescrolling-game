@@ -1,0 +1,6 @@
+[
+    {
+        "name"  : "intro",
+        "class" : "net.saga.mmstyle.screen.IntroScene"
+    }
+]
