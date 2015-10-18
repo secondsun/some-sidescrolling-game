@@ -17,7 +17,6 @@
  */
 package net.saga.mmstyle.gamespecifictests;
 
-import com.badlogic.gdx.Files;
 import com.badlogic.gdx.files.FileHandle;
 import java.io.File;
 import java.net.URISyntaxException;
@@ -26,10 +25,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.saga.mmstyle.corrdinator.DefaultSceneCoordinator;
 import net.saga.mmstyle.corrdinator.SceneCoordinator;
+import net.saga.mmstyle.screen.GameScene;
 import net.saga.mmstyle.screen.IntroScene;
+import net.saga.mmstyle.screen.MainMenu;
+import net.saga.mmstyle.screen.SceneResult;
+import net.saga.mmstyle.screen.Settings;
 import net.saga.mmstyle.screen.TitleScene;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import org.junit.Test;
 
 /**
@@ -46,7 +48,22 @@ public class SceneCorordinatorTests {
     @Test
     public void testDefaultSceneCoordinatorTransitionsIntroToTitle() {
         SceneCoordinator coordinator = new DefaultSceneCoordinator(new FileHandle(getFile("scenes.json")));
-        coordinator.transition();
+        coordinator.transition(null);
+        assertTrue(coordinator.getCurrentScene() instanceof TitleScene);
+    }
+    
+    @Test
+    public void testDefaultSceneCoordinatorTransitionsBasedOnSceneResult() {
+        SceneCoordinator coordinator = new DefaultSceneCoordinator(new FileHandle(getFile("branching_scenes")));
+        assertTrue(coordinator.getCurrentScene() instanceof MainMenu);
+        coordinator.transition(SceneResult.newInstance("settings"));
+        assertTrue(coordinator.getCurrentScene() instanceof Settings);
+        coordinator.transition(SceneResult.newInstance("menu"));
+        assertTrue(coordinator.getCurrentScene() instanceof MainMenu);
+        coordinator.transition(SceneResult.newInstance("game"));
+        assertTrue(coordinator.getCurrentScene() instanceof GameScene);
+        coordinator.transition(SceneResult.newInstance("end"));
+        assertTrue(coordinator.getCurrentScene() instanceof MainMenu);
         assertTrue(coordinator.getCurrentScene() instanceof TitleScene);
     }
     
@@ -60,3 +77,4 @@ public class SceneCorordinatorTests {
     }
     
 }
+

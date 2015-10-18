@@ -11,7 +11,7 @@ sourceSets.main.java.srcDirs         = [ "src/" ]
 sourceSets.main.resources.srcDirs    = [ "assets" ]
 sourceSets.main.java.srcDirs         = [ "src/" ]
 sourceSets.test.java.srcDirs         = [ "test/" ]
-
+sourceSets.test.resources.srcDirs    = [ "test_assets" ]
 eclipse.project {
     name = appName + "-core"
 }
