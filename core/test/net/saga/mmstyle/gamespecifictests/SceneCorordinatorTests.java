@@ -17,6 +17,13 @@
  */
 package net.saga.mmstyle.gamespecifictests;
 
+import com.badlogic.gdx.Files;
+import com.badlogic.gdx.files.FileHandle;
+import java.io.File;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.saga.mmstyle.corrdinator.DefaultSceneCoordinator;
 import net.saga.mmstyle.corrdinator.SceneCoordinator;
 import net.saga.mmstyle.screen.IntroScene;
@@ -30,8 +37,17 @@ public class SceneCorordinatorTests {
  
     @Test
     public void testLoadsScenesJsonFile() {
-        SceneCoordinator coordinator = new DefaultSceneCoordinator("scenes.json");
+        SceneCoordinator coordinator = new DefaultSceneCoordinator(new FileHandle(getFile("scenes.json")));
         assertTrue(coordinator.getCurrentScene() instanceof IntroScene);
+    }
+
+    private File getFile(String fileName) {
+        try {
+            return Paths.get(ClassLoader.getSystemResource(fileName).toURI()).toFile();
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(SceneCorordinatorTests.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException(ex);
+        }
     }
     
 }

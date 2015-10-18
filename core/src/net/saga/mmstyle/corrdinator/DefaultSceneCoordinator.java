@@ -17,7 +17,6 @@
  */
 package net.saga.mmstyle.corrdinator;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -37,8 +36,8 @@ public class DefaultSceneCoordinator implements SceneCoordinator{
     private final Map<String, Class<? extends Scene>> scenes;
     private Scene currentScene;
     
-    public DefaultSceneCoordinator(String jsonFilename) {
-        final FileHandle scenesFile = Gdx.files.internal(jsonFilename);
+    public DefaultSceneCoordinator(final FileHandle scenesFile) {
+        
         final JsonArray scenesJSONArray = new JsonParser().parse(scenesFile.reader()).getAsJsonArray();
         scenes = new HashMap<>(scenesJSONArray.size());
         buildScenes(scenesJSONArray);
