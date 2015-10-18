@@ -27,7 +27,7 @@ import net.saga.mmstyle.Scene;
 /**
  * The intro scene to the game.  Displays opening text currently.
  */
-public class IntroScreen implements Scene {
+public class IntroScene implements Scene {
     private SpriteBatch batch;
     private BitmapFont font;
     
