@@ -25,6 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.saga.mmstyle.corrdinator.DefaultSceneCoordinator;
 import net.saga.mmstyle.corrdinator.SceneCoordinator;
+import net.saga.mmstyle.corrdinator.SceneNotFoundException;
 import net.saga.mmstyle.screen.GameScene;
 import net.saga.mmstyle.screen.IntroScene;
 import net.saga.mmstyle.screen.MainMenu;
@@ -48,13 +49,19 @@ public class SceneCorordinatorTests {
     @Test
     public void testDefaultSceneCoordinatorTransitionsIntroToTitle() {
         SceneCoordinator coordinator = new DefaultSceneCoordinator(new FileHandle(getFile("scenes.json")));
-        coordinator.transition(null);
+        coordinator.transition(SceneResult.newInstance("title"));
         assertTrue(coordinator.getCurrentScene() instanceof TitleScene);
+    }
+    
+    @Test(expected = SceneNotFoundException.class)
+    public void testDefaultSceneCoordinatorBadTransitionsThrowException() {
+        SceneCoordinator coordinator = new DefaultSceneCoordinator(new FileHandle(getFile("scenes.json")));
+        coordinator.transition(SceneResult.newInstance("fail"));
     }
     
     @Test
     public void testDefaultSceneCoordinatorTransitionsBasedOnSceneResult() {
-        SceneCoordinator coordinator = new DefaultSceneCoordinator(new FileHandle(getFile("branching_scenes")));
+        SceneCoordinator coordinator = new DefaultSceneCoordinator(new FileHandle(getFile("branching_scenes.json")));
         assertTrue(coordinator.getCurrentScene() instanceof MainMenu);
         coordinator.transition(SceneResult.newInstance("settings"));
         assertTrue(coordinator.getCurrentScene() instanceof Settings);
@@ -64,7 +71,7 @@ public class SceneCorordinatorTests {
         assertTrue(coordinator.getCurrentScene() instanceof GameScene);
         coordinator.transition(SceneResult.newInstance("end"));
         assertTrue(coordinator.getCurrentScene() instanceof MainMenu);
-        assertTrue(coordinator.getCurrentScene() instanceof TitleScene);
+        
     }
     
     private File getFile(String fileName) {

@@ -23,7 +23,7 @@
     },
     {
         "name"  : "game",
-        "class" : "net.saga.mmstyle.screen.Game",
+        "class" : "net.saga.mmstyle.screen.GameScene",
         "transitions" : [{
             "on" : "end",
             "to" : "menu"

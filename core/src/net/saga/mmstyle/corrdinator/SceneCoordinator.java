@@ -42,6 +42,9 @@ public interface SceneCoordinator {
      *
      * @param result The result of the current Scene. This is used to transition
      * to the next scene
+     * 
+     * @throws SceneNotFoundException if a scene isn't found
+     * 
      */
     public void transition(SceneResult result);
 

@@ -28,14 +28,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.saga.mmstyle.Scene;
 import net.saga.mmstyle.screen.SceneResult;
-import net.saga.mmstyle.screen.TitleScene;
 
 public class DefaultSceneCoordinator implements SceneCoordinator{
     
     private static final String NAME_KEY = "name";
     private static final String CLASS_KEY = "class";
+    private static final String TRANSITIONS_KEY = "transitions";
+    private static final String TRANSITION_ON_KEY = "on";
+    private static final String TRANSITION_TO_KEY = "to";
     
-    private final Map<String, Class<? extends Scene>> scenes;
+    private final Map<String, SceneHolder> scenes;
+    
+    private String currentSceneName;
     private Scene currentScene;
     
     public DefaultSceneCoordinator(final FileHandle scenesFile) {
@@ -46,6 +50,7 @@ public class DefaultSceneCoordinator implements SceneCoordinator{
         setFirstScene(scenesJSONArray.get(0).getAsJsonObject());
     }
 
+    @Override
     public Scene getCurrentScene() {
         return currentScene;
     }
@@ -54,14 +59,7 @@ public class DefaultSceneCoordinator implements SceneCoordinator{
         for (JsonElement sceneElement : scenesJSONArray) {
             final JsonObject sceneObject = sceneElement.getAsJsonObject();
             final String sceneName = sceneObject.get(NAME_KEY).getAsString();
-            final String className = sceneObject.get(CLASS_KEY).getAsString();
-            
-            try {
-                scenes.put(sceneName, (Class<? extends Scene>) Class.forName(className));
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(DefaultSceneCoordinator.class.getName()).log(Level.SEVERE, null, ex);
-                throw new RuntimeException(ex);
-            }
+            scenes.put(sceneName, new SceneHolder(sceneObject));
             
         }
         
@@ -74,8 +72,8 @@ public class DefaultSceneCoordinator implements SceneCoordinator{
      */
     private void setFirstScene(JsonObject firstSceneJsonObject) {
         try {
-            final String sceneName = firstSceneJsonObject.get(NAME_KEY).getAsString();
-            Class<? extends Scene> sceneClass = scenes.get(sceneName);
+            currentSceneName = firstSceneJsonObject.get(NAME_KEY).getAsString();
+            Class<? extends Scene> sceneClass = scenes.get(currentSceneName).klazz;
             currentScene = sceneClass.newInstance();
         } catch (InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(DefaultSceneCoordinator.class.getName()).log(Level.SEVERE, null, ex);
@@ -85,9 +83,63 @@ public class DefaultSceneCoordinator implements SceneCoordinator{
 
     @Override
     public void transition(SceneResult result) {
-        this.currentScene = new TitleScene();
+        SceneHolder holder = scenes.get(currentSceneName);
+        final String transitionTo = holder.sceneTransitions.get(result.getKey());
+        if (transitionTo == null) {
+            throw new SceneNotFoundException(result.getKey() + " Is not a valid transition");
+        }
+        
+        holder = scenes.get(transitionTo);
+        
+        if (holder == null) {
+            throw new SceneNotFoundException(transitionTo + " Is not a valid transition");
+        }
+        this.currentSceneName = transitionTo;
+        this.currentScene = this.newInstance(holder.klazz);
+    }
+
+    /**
+     * Returns a new instance and wraps checked exceptions in Runtime Exceptions.
+     * @param className the class we want
+     * @return a new Instance of the cleas
+     * @throws RuntimeException if the classes aren't setup right
+     */ 
+    private Scene newInstance(Class<? extends Scene> className) {
+        try {
+            return className.newInstance();
+        } catch (InstantiationException | IllegalAccessException ex) {
+            Logger.getLogger(DefaultSceneCoordinator.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException(ex);
+        }
+    }
+    
+    private static class SceneHolder {
+
+        private final Class<? extends Scene> klazz;
+        private final Map<String, String> sceneTransitions;
+        
+        public SceneHolder(JsonObject sceneObject) {
+            try {
+                final String className = sceneObject.get(CLASS_KEY).getAsString();
+                final JsonArray transitions = sceneObject.get(TRANSITIONS_KEY).getAsJsonArray();
+                
+                this.klazz = (Class<? extends Scene>) Class.forName(className);
+                this.sceneTransitions = new HashMap<>(transitions.size());
+                
+                for (JsonElement transition : transitions) {
+                    final String transitionOn = transition.getAsJsonObject().get(TRANSITION_ON_KEY).getAsString();
+                    final String transitionTo = transition.getAsJsonObject().get(TRANSITION_TO_KEY).getAsString();
+                    sceneTransitions.put(transitionOn, transitionTo);
+                }
+                
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(DefaultSceneCoordinator.class.getName()).log(Level.SEVERE, null, ex);
+                throw new RuntimeException(ex);
+            }
+        }
     }
     
     
     
 }
+

@@ -1,6 +1,20 @@
 [
     {
         "name"  : "intro",
-        "class" : "net.saga.mmstyle.screen.IntroScene"
+        "class" : "net.saga.mmstyle.screen.IntroScene",
+        "transitions" : [{
+            "on" : "title",
+            "to" : "title"
+            }
+        ]
+    },
+   {
+        "name"  : "title",
+        "class" : "net.saga.mmstyle.screen.TitleScene",
+        "transitions" : [{
+            "on" : "title",
+            "to" : "title"
+            }
+        ]
     }
 ]

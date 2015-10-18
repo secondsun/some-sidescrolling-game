@@ -23,18 +23,18 @@ import java.util.Objects;
  * A scene result is a wrapper for a key to be used by a SceneCoordinator for
  * transitioning between scenes
  */
-public class SceneResult<T> {
-    private final T key;
+public class SceneResult {
+    private final String key;
     
-    public static <T> SceneResult<T> newInstance(T key) {
-        return new SceneResult<>(key);
+    public static SceneResult newInstance(String key) {
+        return new SceneResult(key);
     }
     
-    private SceneResult(T key) {
+    private SceneResult(String key) {
         this.key = key;
     }
     
-    public T getKey() {
+    public String getKey() {
         return key;
     }
 
@@ -53,7 +53,7 @@ public class SceneResult<T> {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final SceneResult<?> other = (SceneResult<?>) obj;
+        final SceneResult other = (SceneResult) obj;
         if (!Objects.equals(this.key, other.key)) {
             return false;
         }
